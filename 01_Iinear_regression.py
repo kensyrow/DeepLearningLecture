@@ -1,6 +1,5 @@
-
-
 import torch
+import torch.nn as nn
 import numpy as np
 
 # Dataset
@@ -9,18 +8,20 @@ y_train = np.array([[2.0], [4.0], [6.0]], dtype=np.float32)
 
 # Hyper-parameters
 learning_rate = 0.01
-num_epochs = 2000
+num_epochs = 100
+
 
 # Linear regression model
-class Model(torch.nn.Module):
+class Model(nn.Module):
 
     def __init__(self):
         super(Model, self).__init__()
-        self.linear = torch.nn.Linear(1, 1)
+        self.linear = nn.Linear(1, 1)
 
     def forward(self, x):
         y_pred = self.linear(x)
         return y_pred
+
 
 # Load the model
 model = Model()

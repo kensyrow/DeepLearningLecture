@@ -1,6 +1,5 @@
-
-
 import torch
+import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 import numpy as np
 
@@ -60,20 +59,21 @@ test_loader = DataLoader(dataset=test_dataset,
 
 
 # Logistic regression model
-class Model(torch.nn.Module):
+class Model(nn.Module):
 
     def __init__(self):
         super(Model, self).__init__()
-        self.l1 = torch.nn.Linear(8, 6)
-        self.l2 = torch.nn.Linear(6, 4)
-        self.l3 = torch.nn.Linear(4, 1)
+        self.l1 = nn.Linear(8, 4)
+        self.l2 = nn.Linear(4, 1)
 
-        self.relu = torch.nn.ReLU()
+        self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-        out1 = self.relu(self.l1(x))
-        out2 = self.relu(self.l2(out1))
-        y_pred = torch.sigmoid(self.l3(out2))
+        out = self.l1(x)
+        out = self.sigmoid(out)
+        out = self.l2(out)
+        y_pred = self.sigmoid(out)
+
         return y_pred
 
 class DeepModel(torch.nn.Module):

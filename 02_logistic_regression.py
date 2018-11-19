@@ -1,6 +1,5 @@
-
-
 import torch
+import torch.nn as nn
 import numpy as np
 
 # Dataset
@@ -13,15 +12,16 @@ num_epochs = 2000
 
 
 # Logistic regression model
-class Model(torch.nn.Module):
+class Model(nn.Module):
 
     def __init__(self):
         super(Model, self).__init__()
-        self.linear = torch.nn.Linear(1, 1)
+        self.linear = nn.Linear(1, 1)
+        self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
         out = self.linear(x)
-        y_pred = torch.sigmoid(out)
+        y_pred = self.sigmoid(out)
         return y_pred
 
 
@@ -31,9 +31,6 @@ model = Model()
 # Loss and optimizer
 criterion = torch.nn.BCELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
-
-
-
 
 # Train the model
 for epoch in range(num_epochs):
@@ -52,7 +49,6 @@ for epoch in range(num_epochs):
 
     if (epoch + 1) % 5 == 0:
         print('Epoch [{}/{}], loss: {:.4f}'.format(epoch + 1, num_epochs, loss.item()))
-
 
 # Test the model
 hour_var = torch.Tensor([[1.0]])
