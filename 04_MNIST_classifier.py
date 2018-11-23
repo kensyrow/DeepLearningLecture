@@ -1,7 +1,17 @@
 import torch
 import torch.nn as nn
 import torchvision
+import torchvision.utils as utils
+import torchvision.datasets as datasets
 import torchvision.transforms as transforms
+
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+import numpy as np
+import random
+
+
 
 # Hyper-parameters
 input_size = 784
@@ -13,24 +23,30 @@ batch_size = 16
 learning_rate = 0.01
 
 # MNIST dataset
-train_dataset = torchvision.datasets.MNIST(root='../../data',
+train_dataset = datasets.MNIST(root='../../data',
                                            train=True,
                                            transform=transforms.ToTensor(),
                                            download=True)
 
-test_dataset = torchvision.datasets.MNIST(root='../../data',
+test_dataset = datasets.MNIST(root='../../data',
                                           train=False,
                                           transform=transforms.ToTensor())
 
 # Data loader
-train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
+train_loader = utils.data.DataLoader(dataset=train_dataset,
                                            batch_size=batch_size,
                                            shuffle=True)
 
-test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
+test_loader = utils.data.DataLoader(dataset=test_dataset,
                                           batch_size=batch_size,
                                           shuffle=False)
 
+print(train_dataset.train_data.size())
+print(train_dataset.train_labels.size())
+
+index = 0
+plt.imshow(mnist_train.train_data[index, :, :].numpy(), cmap='gray')
+plt.title('Label : {}'.format(mnist_train.train_labels[index])
 
 # Fully connected neural network with one hidden layer
 class NeuralNet(nn.Module):
