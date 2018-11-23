@@ -1,9 +1,8 @@
 import torch
 import torch.nn as nn
 import torchvision
-import torchvision.utils as utils
-import torchvision.datasets as datasets
-import torchvision.transforms as transforms
+import torchvision.datasets
+import torchvision.transforms
 
 import matplotlib.pyplot as plt
 %matplotlib inline
@@ -23,30 +22,47 @@ batch_size = 16
 learning_rate = 0.01
 
 # MNIST dataset
-train_dataset = datasets.MNIST(root='../../data',
+train_dataset = torchvision.datasets.MNIST(root='../../data',
                                            train=True,
-                                           transform=transforms.ToTensor(),
+                                           transform=torchvision.transforms.ToTensor(),
                                            download=True)
 
-test_dataset = datasets.MNIST(root='../../data',
+test_dataset = torchvision.datasets.MNIST(root='../../data',
                                           train=False,
-                                          transform=transforms.ToTensor())
+                                          transform=torchvision.transforms.ToTensor())
 
 # Data loader
-train_loader = utils.data.DataLoader(dataset=train_dataset,
+train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
                                            batch_size=batch_size,
                                            shuffle=True)
 
-test_loader = utils.data.DataLoader(dataset=test_dataset,
+test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
                                           batch_size=batch_size,
                                           shuffle=False)
 
 print(train_dataset.train_data.size())
 print(train_dataset.train_labels.size())
 
+
 index = 0
 plt.imshow(mnist_train.train_data[index, :, :].numpy(), cmap='gray')
-plt.title('Label : {}'.format(mnist_train.train_labels[index])
+plt.title('Label : {}'.format(mnist_train.train_labels[index]))
+
+def imshow(img):
+    img = img / 2 + 0.5
+    npimg = img.numpy()
+    plt.imshow(np.transpose(npimg, (1,2,0)))
+    plt.show()
+    
+batch_images, batch_labels = next(iter(train_loader))
+
+print(batch_images.size())
+print(batch_labels.size())
+
+imshow(torchvision.utils.make_grid(batch_images))
+batch_labels.numpy()
+
+
 
 # Fully connected neural network with one hidden layer
 class NeuralNet(nn.Module):
