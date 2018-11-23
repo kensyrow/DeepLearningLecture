@@ -1,7 +1,13 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import random
+
 import torch
 import torch.nn as nn
-import torchvision
-import torchvision.transforms as transforms
+import torchvision.datasets
+import torchvision.transforms
+%matplotlib inline
+
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -14,11 +20,9 @@ batch_size = 64
 
 
 # Image preprocessing modules
-transform = transforms.Compose([
-    transforms.Pad(4),
-    transforms.RandomHorizontalFlip(),
-    transforms.RandomCrop(32),
-    transforms.ToTensor()])
+transform = torchvision.transforms.Compose(
+    [torchvision.transforms.ToTensor(),
+    torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5,0.5,0.5))])
 
 # CIFAR-10 dataset
 train_dataset = torchvision.datasets.CIFAR10(root='../../data/',
@@ -28,7 +32,7 @@ train_dataset = torchvision.datasets.CIFAR10(root='../../data/',
 
 test_dataset = torchvision.datasets.CIFAR10(root='../../data/',
                                             train=False,
-                                            transform=transforms.ToTensor())
+                                            transform=transform)
 
 # Data loader
 train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
@@ -38,6 +42,28 @@ train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
 test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
                                           batch_size=batch_size,
                                           shuffle=False)
+
+
+index = 0
+plt.imshow(train_dataset.train_data[index, :, :], cmap='gray')
+plt.title('Label : {}'.format(train_dataset.train_labels[index]))
+
+
+
+def imshow(img):
+    img = img / 2 + 0.5
+    npimg = img.numpy()
+    plt.imshow(np.transpose(npimg, (1,2,0)))
+    plt.show()
+    
+batch_images, batch_labels = next(iter(train_loader))
+
+print(batch_images.size())
+print(batch_labels.size())
+
+imshow(torchvision.utils.make_grid(batch_images))
+print(batch_labels.numpy())
+
 
 class ConvNet(nn.Module):
     def __init__(self, num_classes=10):
